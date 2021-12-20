@@ -21,9 +21,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -52,6 +56,7 @@ class CookiesTest {
 
     @Mock
     HttpServletResponse response;
+    
 
     // Test data
     Cat dummy = new Cat("dummy", "dummy.png");
@@ -95,6 +100,56 @@ class CookiesTest {
         List<Opinion> opinions = cookiesService
                 .updateOpinionsWithCookiesValue(dummy, "");
         assertThat(opinions, empty());
+    }
+
+
+
+    //test is OpinionInCookies
+    Opinion dummy2 = new Opinion( 3.4 , "hola que tal");
+
+    @Test
+    @DisplayName("Check opinion when is true")
+    void testCheckOpinionInCookies() {
+        boolean opinionInCookies = cookiesService.isOpinionInCookies(dummy2, 3.4,
+                "hola que tal");
+        assertThat(opinionInCookies, equalTo(true));
+    }
+
+    @DisplayName("Check Opinion when stars is not equal")
+    @Test
+    void testCheckOpinionInStarsEmptyCookies() {
+        boolean catInCookies = cookiesService.isOpinionInCookies(dummy2, 0 ,"hola que tal");
+        assertThat(catInCookies, equalTo(false));
+    }
+
+    @DisplayName("Check Opinion when comment is not equal")
+    @Test
+    void testCheckOpinionInCommentEmptyCookies() {
+        boolean catInCookies = cookiesService.isOpinionInCookies(dummy2, 3.4 ,"");
+        assertThat(catInCookies, equalTo(false));
+    }
+
+    //creando lista de Cat
+    Cat cat_1 = new Cat("1", "azula.png");
+    
+    String exampleCookie = "0#3.4#_22#3.4#_";
+    String exampleCookie2 = "22#3.4#_11#3.5#_";
+    
+    
+ 
+
+    @DisplayName("Check cat value is inside of cookie")
+    @Test
+    void checkGetValueForCat(){
+        Optional<String> salida = cookiesService.getValueForCat(cat_1, exampleCookie);
+        assertEquals(salida , Optional.of("0#3.4#"));
+    }
+
+    @DisplayName("Check cat value is not inside of cookie")
+    @Test
+    void checkGetValueForCatEmpty(){
+        Optional<String> salida = cookiesService.getValueForCat(cat_1, exampleCookie2);
+        assertEquals(salida , Optional.empty());
     }
 
 }

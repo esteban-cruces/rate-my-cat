@@ -38,7 +38,7 @@ public class Opinion {
     protected Opinion() {
     }
 
-    protected Opinion(double stars, String comment) {
+    public Opinion(double stars, String comment) {
         this.stars = stars;
         this.comment = comment;
     }

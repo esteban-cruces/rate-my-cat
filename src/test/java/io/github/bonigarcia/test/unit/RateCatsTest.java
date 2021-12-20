@@ -19,8 +19,11 @@ package io.github.bonigarcia.test.unit;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.text.IsEmptyString.emptyString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -34,11 +37,17 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.OngoingStubbing;
+import static org.hamcrest.CoreMatchers.instanceOf;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import io.github.bonigarcia.Cat;
 import io.github.bonigarcia.CatException;
 import io.github.bonigarcia.CatRepository;
 import io.github.bonigarcia.CatService;
+import io.github.bonigarcia.Opinion;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Unit tests (black-box): rating cats")
@@ -51,10 +60,14 @@ class RateCatsTest {
     @Mock
     CatRepository catRepository;
 
+    
+    
+
     // Test data
     Cat dummy = new Cat("dummy", "dummy.png");
     int stars = 5;
     String comment = "foo";
+
 
     @ParameterizedTest(name = "Rating cat with {0} stars")
     @ValueSource(doubles = { 0.5, 5 })
@@ -98,5 +111,35 @@ class RateCatsTest {
                 catService.getOpinions(dummyCat).iterator().next().getComment(),
                 emptyString());
     }
+
+
+
+
+    @DisplayName("Check when opinions is empty")
+    @Test
+    void testGetOpinions(){
+        //lista que retorna getOpinions
+        List<Opinion> opiniones = new ArrayList<>();
+        opiniones.add(new Opinion(2.3, "esto es una prueba"));
+        opiniones.add(new Opinion(4.5, "ya me aburrí"));
+
+        //se crea gato de prueba
+        Cat cat_1 = new Cat("1", "azula.png");
+        cat_1.rate(2.3 , "esto es una prueba");
+        cat_1.rate(4.5 , "ya me aburrí");
+        List<Opinion> listOpinion = cat_1.getOpinions();
+        
+        assertEquals(listOpinion.get(0).getStars(), opiniones.get(0).getStars());
+        assertEquals(listOpinion.get(0).getComment(), opiniones.get(0).getComment());
+
+        assertEquals(listOpinion.get(1).getStars(), opiniones.get(1).getStars());
+        assertEquals(listOpinion.get(1).getComment(), opiniones.get(1).getComment());
+        
+    }
+
+    
+
+
+
 
 }
