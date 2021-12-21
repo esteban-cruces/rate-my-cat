@@ -128,7 +128,8 @@ class CookiesTest {
     }
 
     //creando lista de Cat
-    Cat cat_1 = new Cat("1", "azula.png");
+    //este objeto Cat se genera con ID 0
+    Cat cat_1 = new Cat("carlina", "azula.png");
     
     String exampleCookie = "0#3.4#_22#3.4#_";
     String exampleCookie2 = "22#3.4#_11#3.5#_";
@@ -139,6 +140,7 @@ class CookiesTest {
     @DisplayName("Check cat value is inside of cookie")
     @Test
     void checkGetValueForCat(){
+        cat_1.rate(3.4 , "esto es una prueba");
         Optional<String> salida = cookiesService.getValueForCat(cat_1, exampleCookie);
         assertEquals(salida , Optional.of("0#3.4#"));
     }
@@ -146,6 +148,7 @@ class CookiesTest {
     @DisplayName("Check cat value is not inside of cookie")
     @Test
     void checkGetValueForCatEmpty(){
+        cat_1.rate(3.4 , "esto es una prueba");
         Optional<String> salida = cookiesService.getValueForCat(cat_1, exampleCookie2);
         assertEquals(salida , Optional.empty());
     }

@@ -54,8 +54,6 @@ class RateCatsTest {
 
     @Mock
     CatRepository catRepository;
-
-    
     
 
     // Test data
@@ -87,20 +85,21 @@ class RateCatsTest {
     @DisplayName("Rating cats with a comment")
     @Tag("functional-requirement-4")
     void testRatingWithComments() {
-        when(catRepository.findById(any(Long.class)))
-                .thenReturn(Optional.of(dummy));
+        when(catRepository.findById(any(Long.class))).thenReturn(Optional.of(dummy));
+
         Cat dummyCat = catService.rateCat(stars, comment, 0);
         assertThat(
                 catService.getOpinions(dummyCat).iterator().next().getComment(),
                 equalTo(comment));
     }
 
+
     @Test
     @DisplayName("Rating cats with empty comment")
     @Tag("functional-requirement-4")
     void testRatingWithEmptyComments() {
-        when(catRepository.findById(any(Long.class)))
-                .thenReturn(Optional.of(dummy));
+        when(catRepository.findById(any(Long.class))).thenReturn(Optional.of(dummy));
+
         Cat dummyCat = catService.rateCat(stars, dummy);
         assertThat(
                 catService.getOpinions(dummyCat).iterator().next().getComment(),
